@@ -21,11 +21,11 @@ export default function Login() {
             </div>
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label for="nickName">Nickname</label>
+                    <label htmlFor="nickName">Nickname</label>
                     <input type="text" name="nickName"></input>
                 </div>
                 <div>
-                    <label for="password">Password</label>
+                    <label htmlFor="password">Password</label>
                     <input type="text" name="password"></input>
                 </div>
                 <div>
