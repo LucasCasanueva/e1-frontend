@@ -5,7 +5,7 @@ export default function UserItem(props) {
         <div>
             <li>
                 <p>Id: {user.id}</p>
-                <p>Nickname: {user.nick}</p>
+                <p>Email: {user.email}</p>
             </li>
         </div>
     );
