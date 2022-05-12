@@ -13,7 +13,7 @@ export default function UserList() {
                 'Content-Type': 'application/json',
             },
           };
-          const response = await fetch(`http://localhost/api/v1/users`, requestOptions);
+          const response = await fetch(`${process.env.REACT_APP_API_URL}/users`, requestOptions);
           if (response.ok) {
             const data = await response.json();
             setUsersList(data);

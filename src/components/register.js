@@ -1,35 +1,52 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { stringify } from 'flatted';
 
 export default function Register() {
     const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [nickname, setNickname] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-    const handleSubmit = (event) => {
+    const handleNickname = (value) => {
+        setNickname(value);
+    };
+
+    const handleEmail = (value) => {
+        setEmail(value);
+    };
+
+    const handlePassword = (value) => {
+        setPassword(value);
+    };
+
+    const handleSubmit = async (event) => {
+        console.log('HOLA');
         event.preventDefault();
-        console.log('SUBMIT');  // cambiar por fetch cuando conectemos con backend
-        const a = event.target[0];
-        const b = event.target[1];
-        const c = event.target[2];
+        const values = {
+            email: email,
+            full_name: nickname,
+            password: password,
+            is_active: true,
+            is_superuser: false
+        };
+        console.log(values);
         const requestOptions = {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({full_name: a,
-                    email: b,
-                    password: c,
-                    is_active: true,
-                    is_superuser: false})
+            body: stringify(values),
           };
-        console.log(process.env.REACT_APP_API_URL);
-        fetch(`${process.env.REACT_APP_API_URL}/api/v1/users`, requestOptions).then((response) => {
-            if (response.status !== 200) {
-                setMessage('Something went wrong');
-                return [];
-            }
-            console.log(response.json());
-            return response.json();
-        });
-    }
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/users`, requestOptions);
+        console.log(response);
+        if (response.ok) {
+            const data = await response.json();
+            console.log('ok');
+          }
+          else {
+              setErrorMessage(response.text());
+          }
+    };
 
     if (loading) {
         return <h2>Loading...</h2>;
@@ -43,15 +60,15 @@ export default function Register() {
             <form onSubmit={handleSubmit}>
                 <div>
                     <label for="nickName">Nickname</label>
-                    <input type="text" name="nickName"></input>
+                    <input type="text" name="nickName" onChange={handleNickname}></input>
                 </div>
                 <div>
                     <label for="email">Email</label>
-                    <input type="text" name="email"></input>
+                    <input type="text" name="email" onChange={handleEmail}></input>
                 </div>
                 <div>
                     <label for="password">Password</label>
-                    <input type="text" name="password"></input>
+                    <input type="text" name="password" onChange={handlePassword}></input>
                 </div>
                 <div>
                   <button type="submit">Register</button>
