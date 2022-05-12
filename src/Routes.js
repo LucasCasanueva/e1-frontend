@@ -5,6 +5,7 @@ import Register from './components/register';
 import LocationList from './components/Location/locationList';
 import PingList from './components/Ping/pingList';
 import UserList from './components/User/userList';
+import Map from './components/Map/map';
 
 export default function Routez() {
     return (
@@ -15,6 +16,7 @@ export default function Routez() {
             <Route exact path="/locations" element={<LocationList />} />
             <Route exact path="/pings" element={<PingList />} />
             <Route exact path="/users" element={<UserList />} />
+            <Route exact path="/map" element={<Map />} />
         </Routes>
     );
 }
