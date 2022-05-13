@@ -1,10 +1,40 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import useCurrentUser from '../../hooks/useCurrentUser';
 
 export default function LocationForm() {
+    const [loading, setLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+    const { currentUser } = useCurrentUser(); 
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
+        console.log('HOLA');
         event.preventDefault();
-        console.log('SUBMIT');  // cambiar por fetch cuando conectemos con backend
+        const title = String(event.target.name.value);
+        const xcoord = String(event.target.xcoord.value);
+        const ycoord = String(event.target.ycoord.value);
+        const values = {
+            title: title,
+            coordinates: `POINT(${xcoord} ${ycoord})`
+        };
+        console.log(values);
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${currentUser.access_token}`
+            },
+            body: JSON.stringify(values),
+          };
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/positions`, requestOptions);
+        console.log(response);
+        if (response.ok) {
+            const data = await response.json();
+            console.log('ok');
+          }
+          else {
+              setErrorMessage(response.text());
+          }
     };
 
     return (
@@ -14,16 +44,22 @@ export default function LocationForm() {
             </div>
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label for="name">Name</label>
+                    <label htmlFor="name">Name</label>
                     <input type="text" name="name"></input>
                 </div>
                 <div>
-                    <label for="coordx">Coordenada X</label>
-                    <input type="text" name="coordx"></input>
+                    <label htmlFor="xcoord">Coordenada X</label>
+                    <input type="text" name="xcoord"></input>
                 </div>
                 <div>
-                    <label for="coordy">Coordenada Y</label>
-                    <input type="text" name="coordy"></input>
+                    <label htmlFor="ycoord">Coordenada Y</label>
+                    <input type="text" name="ycoord"></input>
+                </div>
+                <div>
+                  <button type="submit">Add</button>
+                </div>
+                <div>
+                    <Link to='/home'> Home </Link>
                 </div>
             </form>
         </div>

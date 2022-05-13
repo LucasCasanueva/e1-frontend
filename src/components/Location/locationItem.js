@@ -4,8 +4,7 @@ export default function LocationItem(props) {
     return (
         <div>
             <li>
-                <p>Name: {loc.name}</p>
-                <p>Location: ({loc.x}, {loc.y})</p>
+                <p>Name: {loc.title}</p>
             </li>
         </div>
     );
