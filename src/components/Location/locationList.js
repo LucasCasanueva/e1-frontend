@@ -1,33 +1,32 @@
+import React, {useState, useEffect} from 'react';
 import LocationItem from "./locationItem";
+import useCurrentUser from "../../hooks/useCurrentUser";
 
 export default function LocationList() {
+    const [positionsList, setPositionsList] = useState([]);
+    const {currentUser} = useCurrentUser();
 
-    const locationsArray = [
-        {
-            id: 1,
-            name: 'starbucks',
-            x: '24.24',
-            y: '56.56',
-        },
-        {
-            id: 2,
-            name: 'mcdonald',
-            x: '19.19',
-            y: '22.22',
-        },
-        {
-            id: 3,
-            name: 'cinehoyts',
-            x: '35.35',
-            y: '43.43',
-        },
-        {
-            id: 4,
-            name: 'cerro kenny',
-            x: '31.31',
-            y: '41.41',
-        },
-    ];
+    const getPositions = async () => {
+        const requestOptions = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${currentUser.access_token}`
+            },
+          };
+          const response = await fetch(`${process.env.REACT_APP_API_URL}/positions`, requestOptions);
+          if (response.ok) {
+            const data = await response.json();
+            setPositionsList(data);
+          }
+          else {
+              console.log('no paso');
+          }
+    };
+
+    useEffect(() =>{
+        getPositions();
+    }, []);
     
     return (
         <div>
@@ -35,7 +34,7 @@ export default function LocationList() {
                 <h1>My Locations</h1>
             </div>
             <ul>
-                {locationsArray.map((loc) => (
+                {positionsList.map((loc) => (
                     <LocationItem key={loc.id} loc={loc}/>
                 ))}
             </ul>

@@ -1,46 +1,72 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { stringify } from 'flatted';
+import { Link, Navigate } from 'react-router-dom';
+import useCurrentUser from '../hooks/useCurrentUser';
 
 export default function Register() {
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-    const [nickname, setNickname] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-
-    const handleNickname = (value) => {
-        setNickname(value);
+    const { currentUser, handleUserLogin } = useCurrentUser(); 
+    
+    const fetchMe = async (token) => {
+        const requestOptions = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+            },
+          };
+          const response = await fetch(`${process.env.REACT_APP_API_URL}/users/me`, requestOptions);
+          if (response.ok) {
+              const data = await response.json();
+              return data;
+          }
     };
+    
+    const login = async (email, password) => {
+        const requestOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: JSON.stringify(`grant_type=&username=${email}&password=${password}&scope=&client_id=&client_secret=`),
 
-    const handleEmail = (value) => {
-        setEmail(value);
+          };
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/login/access-token`, requestOptions);
+        if (response.ok) {
+            const data = await response.json();
+            const user = await fetchMe(data.access_token);
+            user.access_token = data.access_token;
+            handleUserLogin(user);
+            console.log('login exitoso');
+          }
+          else {
+              setErrorMessage(response.text());
+          }
     };
-
-    const handlePassword = (value) => {
-        setPassword(value);
-    };
-
+    
     const handleSubmit = async (event) => {
         console.log('HOLA');
         event.preventDefault();
+        const email    = String(event.target.email.value);
+        const nickname = String(event.target.nickname.value);
+        const password = String(event.target.password.value);
         const values = {
             email: email,
-            full_name: nickname,
-            password: password,
             is_active: true,
-            is_superuser: false
+            is_superuser: false,
+            full_name: nickname,
+            password: password
         };
         console.log(values);
         const requestOptions = {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: stringify(values),
+            body: JSON.stringify(values),
+
           };
+        console.log(requestOptions);
         const response = await fetch(`${process.env.REACT_APP_API_URL}/users`, requestOptions);
         console.log(response);
         if (response.ok) {
-            const data = await response.json();
+            await login(email, password);
             console.log('ok');
           }
           else {
@@ -51,6 +77,8 @@ export default function Register() {
     if (loading) {
         return <h2>Loading...</h2>;
       }
+
+    if (currentUser) return <Navigate to="/home" />;
     
     return (
         <div>
@@ -59,16 +87,16 @@ export default function Register() {
             </div>
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label for="nickName">Nickname</label>
-                    <input type="text" name="nickName" onChange={handleNickname}></input>
+                    <label htmlFor="nickname">Nickname</label>
+                    <input type="text" name="nickname"></input>
                 </div>
                 <div>
-                    <label for="email">Email</label>
-                    <input type="text" name="email" onChange={handleEmail}></input>
+                    <label htmlFor="email">Email</label>
+                    <input type="text" name="email"></input>
                 </div>
                 <div>
-                    <label for="password">Password</label>
-                    <input type="text" name="password" onChange={handlePassword}></input>
+                    <label htmlFor="password">Password</label>
+                    <input type="text" name="password"></input>
                 </div>
                 <div>
                   <button type="submit">Register</button>

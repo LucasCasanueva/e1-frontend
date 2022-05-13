@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import UserItem from "./userItem";
+import { Link } from "react-router-dom";
 
 export default function UserList() {
     const [loading, setLoading] = useState(false);
@@ -44,6 +45,9 @@ export default function UserList() {
                     <UserItem key={user.id} user={user}/>
                 ))}
             </ul>
+            <div>
+                <Link to='/home'> Home </Link>
+            </div>
         </div>
     );
 }
