@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import {Link} from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import useCurrentUser from "../../hooks/useCurrentUser";
 import './map.css';
@@ -20,11 +21,10 @@ export default function MyLocations() {
           const response = await fetch(`${process.env.REACT_APP_API_URL}/positions`, requestOptions);
           if (response.ok) {
             const data = await response.json();
+            console.log(data);
             data.map((pos) => (
                 positions2.push([parseFloat(pos.point.slice(6,16)), parseFloat(pos.point.slice(17,27))])
-            ));
-            console.log(positions);
-            console.log(positions2);
+            ))
           }
           else {
               console.log('no paso');
@@ -50,6 +50,9 @@ export default function MyLocations() {
                     </Marker>
                 ))}
         </MapContainer>
+        <div>
+            <Link to='/home'> Home </Link>
+        </div>
     </div>
   );
 }

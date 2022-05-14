@@ -3,9 +3,10 @@ import { Link, Navigate } from 'react-router-dom';
 import useCurrentUser from '../hooks/useCurrentUser';
 
 export default function Home() {
-    const { currentUser, handleUserLogout } = useCurrentUser(); 
+    const { currentUser, handleUserLogout } = useCurrentUser();
+    const [tiempo, setTiempo] = useState({}); 
 
-    /*const getWeather = async () => {
+    const getWeather = async () => {
         const lat = -33.414591;
         const long = -70.559059;
         const requestOptions = {
@@ -19,8 +20,8 @@ export default function Home() {
         console.log(response);
         if (response.ok) {
             const data = await response.json();
-            console.log('weather ok');
-          }
+            console.log(data);
+            setTiempo(data);          }
           else {
               console.log('fail');
           }
@@ -28,7 +29,7 @@ export default function Home() {
 
     useEffect(() =>{
         getWeather();
-    }, []);*/
+    }, []);
     
     if (currentUser) {
         return (
@@ -43,6 +44,18 @@ export default function Home() {
                         <p>Email: {currentUser.email}</p>
                     </div>
                     <div>
+                        <p>Tiempo: {tiempo.descripcion}</p>
+                    </div>
+                    <div>
+                        <p>Temperatura Actual: {tiempo.temp_actual}</p>
+                    </div>
+                    <div>
+                        <p>Temperatura Máxima: {tiempo.temp_maxima}</p>
+                    </div>
+                    <div>
+                        <p>Temperatura Mínima: {tiempo.temp_minima}</p>
+                    </div>
+                    <div>
                         <p>What would you like to do?</p>
                     </div>
                     <div>
@@ -52,10 +65,10 @@ export default function Home() {
                         <Link to='/locations/form'> Registrar Ubicacion </Link>
                     </div>
                     <div>
-                        <Link to='/map'> Ver Mis Ubicaciones </Link>
+                        <Link to='/locations/me'> Ver Mis Ubicaciones </Link>
                     </div>
                     <div>
-                        <Link to='/users'> Comparar Ubicaciones </Link>
+                        <Link to='/locations/compare'> Comparar Ubicaciones </Link>
                     </div>
                     <div>
                         <button onClick={handleUserLogout}> Logout </button>
