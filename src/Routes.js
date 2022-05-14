@@ -7,6 +7,7 @@ import PingList from './components/Ping/pingList';
 import UserList from './components/User/userList';
 import Home from './components/home';
 import LocationList from './components/Location/locationList';
+import MyLocations from './components/Location/myLocations';
 import CurrentUserContextProvider from './contexts/CurrentUserContext';
 
 export default function Routez() {
@@ -18,7 +19,7 @@ export default function Routez() {
                 <Route exact path="/login" element={<Login />} />
                 <Route exact path="/home" element={<Home />} />
                 <Route exact path="/locations/form" element={<LocationForm />} />
-                <Route exact path="/locations" element={<LocationList />} />
+                <Route exact path="/map" element={<MyLocations />} />
                 <Route exact path="/pings" element={<PingList />} />
                 <Route exact path="/users" element={<UserList />} />
             </Routes>

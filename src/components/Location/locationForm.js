@@ -15,7 +15,8 @@ export default function LocationForm() {
         const ycoord = String(event.target.ycoord.value);
         const values = {
             title: title,
-            coordinates: `POINT(${xcoord} ${ycoord})`
+            coordinates: `POINT(${xcoord} ${ycoord})`,
+            point: `POINT(${xcoord} ${ycoord})`
         };
         console.log(values);
         const requestOptions = {
@@ -44,15 +45,15 @@ export default function LocationForm() {
             </div>
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label htmlFor="name">Name</label>
+                    <label htmlFor="name">Name: </label>
                     <input type="text" name="name"></input>
                 </div>
                 <div>
-                    <label htmlFor="xcoord">Coordenada X</label>
+                    <label htmlFor="xcoord">Coordenada X: </label>
                     <input type="text" name="xcoord"></input>
                 </div>
                 <div>
-                    <label htmlFor="ycoord">Coordenada Y</label>
+                    <label htmlFor="ycoord">Coordenada Y: </label>
                     <input type="text" name="ycoord"></input>
                 </div>
                 <div>
